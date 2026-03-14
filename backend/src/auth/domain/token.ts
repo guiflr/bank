@@ -1,5 +1,7 @@
 import { SignInResponse } from '../dtos/signIn';
 
-export interface Token {
+export const AUTH_TOKEN = 'AUTH_TOKEN';
+
+export interface AuthToken {
   generateToken(data: SignInResponse): Promise<string>;
 }

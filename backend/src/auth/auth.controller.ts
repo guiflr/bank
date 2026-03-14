@@ -1,14 +1,14 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Inject, Post } from '@nestjs/common';
 
-import { AuthToken } from './auth.token';
 import { AuthService } from './auth.service';
 import type { SignInDto } from './dtos/signIn';
+import { AUTH_TOKEN, type AuthToken } from './domain/token';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
-    private readonly authToken: AuthToken,
+    @Inject(AUTH_TOKEN) private readonly authToken: AuthToken,
   ) {}
 
   @Post('signin')
