@@ -1,3 +1,5 @@
+export const AUTH_REPOSITORY = 'AUTH_REPOSITORY';
+
 export interface AuthRepository {
   findUserByUsername(
     username: string,
