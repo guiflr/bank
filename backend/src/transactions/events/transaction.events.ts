@@ -13,11 +13,7 @@ export class TransactionsEventsFactoryImpl implements TransactionsEventsFactory 
   async events(event: EventDTO): Promise<DepositResponse> {
     switch (event.type) {
       case 'deposit': {
-        if (!event.deposit) {
-          throw new BadRequestException('Deposit Not Provided');
-        }
-
-        return this.depositEvent.deposit(event.deposit);
+        return this.depositEvent.deposit(event);
       }
       case 'withdraw':
       case 'transfer':
