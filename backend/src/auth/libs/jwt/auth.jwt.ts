@@ -13,17 +13,17 @@ export class AuthJwt implements AuthToken {
     return token;
   }
 
-  async extractDataFromToken(token: string): Promise<SignInResponse> {
+  async extractDataFromToken(token: string): Promise<SignInResponse | null> {
     try {
       const data = jwt.verify(token, SECRET_KEY);
 
       if (typeof data === 'string') {
-        throw new UnauthorizedException('Invalid Token Data');
+        return null;
       }
 
       return data as SignInResponse;
     } catch {
-      throw new UnauthorizedException('Invalid Token');
+      return null;
     }
   }
 }

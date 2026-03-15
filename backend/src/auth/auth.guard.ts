@@ -11,7 +11,7 @@ import type { AuthToken } from './domain/token';
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(@Inject(AUTH_TOKEN) private readonly authToken: AuthToken) {}
-  canActivate(context: ExecutionContext): boolean {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
 
     const token = this.extractToken(request);
@@ -19,7 +19,12 @@ export class AuthGuard implements CanActivate {
       throw new UnauthorizedException('Token Not Provided');
     }
 
-    const payload = this.authToken.extractDataFromToken(token);
+    const payload = await this.authToken.extractDataFromToken(token);
+
+    if (!payload) {
+      throw new UnauthorizedException('Invalid Token');
+    }
+
     request['user'] = payload;
 
     return true;
