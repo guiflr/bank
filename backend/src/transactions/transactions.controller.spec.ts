@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { TransactionsController } from './transactions.controller';
 import { TransactionsService } from './transactions.service';
 import { AuthGuard } from '../auth/auth.guard';
+import type { EventDTO } from './dtos';
 
 describe('TransactionsController', () => {
   let controller: TransactionsController;
@@ -10,6 +11,7 @@ describe('TransactionsController', () => {
   beforeEach(async () => {
     transactionsService = {
       getBalance: jest.fn(),
+      event: jest.fn(),
     } as unknown as jest.Mocked<TransactionsService>;
 
     const module: TestingModule = await Test.createTestingModule({
@@ -37,5 +39,22 @@ describe('TransactionsController', () => {
     });
 
     expect(transactionsService.getBalance).toHaveBeenCalledWith('acc-1');
+  });
+
+  it('should forward the event to the service and return the response', async () => {
+    const event: EventDTO = {
+      type: 'deposit',
+      destination: 'acc-1',
+      amount: 200,
+    };
+
+    const response = {
+      destination: { id: 'acc-1', balance: 200 },
+    };
+
+    transactionsService.event.mockResolvedValue(response);
+
+    await expect(controller.event(event)).resolves.toEqual(response);
+    expect(transactionsService.event).toHaveBeenCalledWith(event);
   });
 });
