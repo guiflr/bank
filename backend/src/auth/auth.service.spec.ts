@@ -3,6 +3,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
 import type { AuthHash } from './domain/hash';
 import type { AuthRepository } from './domain/repository';
+import { AUTH_HASH } from './domain/hash';
+import { AUTH_REPOSITORY } from './domain/repository';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -22,8 +24,8 @@ describe('AuthService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AuthService,
-        { provide: 'AuthRepository', useValue: authRepository },
-        { provide: 'AuthHash', useValue: authHash },
+        { provide: AUTH_REPOSITORY, useValue: authRepository },
+        { provide: AUTH_HASH, useValue: authHash },
       ],
     }).compile();
 

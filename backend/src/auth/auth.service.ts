@@ -1,14 +1,14 @@
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 
-import type { AuthHash } from './domain/hash';
-import type { AuthRepository } from './domain/repository';
+import { AUTH_HASH, type AuthHash } from './domain/hash';
+import { AUTH_REPOSITORY, type AuthRepository } from './domain/repository';
 import { SignInDto, SignInResponse } from './dtos/signIn';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @Inject('AuthRepository') private readonly authRepository: AuthRepository,
-    @Inject('AuthHash') private readonly authHash: AuthHash,
+    @Inject(AUTH_REPOSITORY) private readonly authRepository: AuthRepository,
+    @Inject(AUTH_HASH) private readonly authHash: AuthHash,
   ) {}
 
   async signIn({ username, password }: SignInDto): Promise<SignInResponse> {
