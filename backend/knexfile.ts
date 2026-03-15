@@ -8,4 +8,8 @@ module.exports = {
     directory: path.join(__dirname, 'db', 'migrations'),
     extension: 'js',
   },
+  seeds: {
+    directory: path.join(__dirname, 'db', 'seeds'),
+    extension: 'js',
+  },
 };
