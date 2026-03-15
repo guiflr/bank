@@ -9,7 +9,7 @@ export type Account = {
 export type DepositDAO = {
   account: string;
   balance: number;
-  type: 'deposit';
+  type: 'deposit' | 'withdraw';
 };
 
 export type DepositResponseDAO = {

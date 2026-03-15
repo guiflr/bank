@@ -24,6 +24,13 @@ export type DepositResponse = {
   };
 };
 
+export type WithdrawResponse = {
+  origin: {
+    id: string;
+    balance: number;
+  };
+};
+
 export type EventDTO = TransferDTO | DepositDTO | WithdrawDTO;
 
-export type EventResponse = DepositResponse;
+export type EventResponse = DepositResponse | WithdrawResponse;
