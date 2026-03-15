@@ -13,5 +13,9 @@ export function validateWithdraw(data: WithdrawDTO): Response {
     return { error: `Field 'origin' is required` };
   }
 
+  if (data.origin.length > 20) {
+    return { error: `Field 'destination' is greater than 20 character` };
+  }
+
   return { error: null };
 }
