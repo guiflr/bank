@@ -1,6 +1,8 @@
 import { Injectable, OnModuleDestroy } from '@nestjs/common';
 import knex, { Knex } from 'knex';
 
+import { DATABASE_URL } from 'src/auth/constants';
+
 @Injectable()
 export class KnexService implements OnModuleDestroy {
   private readonly instance: Knex;
@@ -8,7 +10,7 @@ export class KnexService implements OnModuleDestroy {
   constructor() {
     this.instance = knex({
       client: 'pg',
-      connection: process.env.DATABASE_URL,
+      connection: DATABASE_URL,
     });
   }
 
