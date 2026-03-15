@@ -13,10 +13,15 @@ export class Deposit implements DepositEvent {
     private readonly transactionRepository: TransactionRepository,
   ) {}
 
-  async deposit({ amount, destination }: DepositDTO): Promise<DepositResponse> {
+  async deposit({
+    amount,
+    destination,
+    type,
+  }: DepositDTO): Promise<DepositResponse> {
     await this.transactionRepository.deposit({
       account: destination,
       balance: amount,
+      type,
     });
 
     const balance = await this.transactionRepository.getBalance(destination);
