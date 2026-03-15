@@ -5,8 +5,14 @@ import { AuthJwt } from '../auth/libs/jwt/auth.jwt';
 import { KnexService } from '../infra/knex/knex.service';
 import { TransactionsService } from './transactions.service';
 import { TRANSACTION_REPOSITORY } from './domain/repository';
+import {
+  EVENT_FACTORY,
+  TransactionsEventsFactoryImpl,
+} from './domain/events-factory';
 import { TransactionsController } from './transactions.controller';
 import { TransactionKnexRepository } from './infra/transaction.knex.repository';
+import { Deposit } from './events/transaction.deposit';
+import { DEPOSIT_EVENT } from './domain/events';
 
 @Module({
   providers: [
@@ -14,6 +20,8 @@ import { TransactionKnexRepository } from './infra/transaction.knex.repository';
     KnexService,
     AuthJwt,
     TransactionKnexRepository,
+    Deposit,
+    TransactionsEventsFactoryImpl,
     {
       provide: AUTH_TOKEN,
       useExisting: AuthJwt,
@@ -21,6 +29,14 @@ import { TransactionKnexRepository } from './infra/transaction.knex.repository';
     {
       provide: TRANSACTION_REPOSITORY,
       useExisting: TransactionKnexRepository,
+    },
+    {
+      provide: EVENT_FACTORY,
+      useExisting: TransactionsEventsFactoryImpl,
+    },
+    {
+      provide: DEPOSIT_EVENT,
+      useExisting: Deposit,
     },
   ],
   controllers: [TransactionsController],

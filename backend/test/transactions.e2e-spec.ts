@@ -8,14 +8,16 @@ import { AuthGuard } from '../src/auth/auth.guard';
 import { TRANSACTION_REPOSITORY } from '../src/transactions/domain/repository';
 import { TransactionKnexRepository } from '../src/transactions/infra/transaction.knex.repository';
 import { KnexService } from '../src/infra/knex/knex.service';
+import { TransactionsService } from '../src/transactions/transactions.service';
 
 describe('TransactionsModule (e2e)', () => {
   let app: INestApplication<App>;
-  let transactionRepository: { getBalance: jest.Mock };
+  let transactionRepository: { getBalance: jest.Mock; deposit: jest.Mock };
 
   beforeEach(async () => {
     transactionRepository = {
       getBalance: jest.fn(),
+      deposit: jest.fn(),
     };
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -58,5 +60,27 @@ describe('TransactionsModule (e2e)', () => {
       .get('/transactions/balance')
       .query({ account_id: 'missing' })
       .expect(404);
+  });
+
+  it('processes a deposit event through the module services', async () => {
+    transactionRepository.deposit.mockResolvedValue(undefined);
+    transactionRepository.getBalance.mockResolvedValue({ balance: 150 });
+
+    const service = app.get(TransactionsService);
+    const response = await service.event({
+      type: 'deposit',
+      destination: 'acc-1',
+      amount: 150,
+    });
+
+    expect(response).toEqual({
+      destination: { id: 'acc-1', balance: 150 },
+    });
+    expect(transactionRepository.deposit).toHaveBeenCalledWith({
+      account: 'acc-1',
+      balance: 150,
+      type: 'deposit',
+    });
+    expect(transactionRepository.getBalance).toHaveBeenCalledWith('acc-1');
   });
 });
