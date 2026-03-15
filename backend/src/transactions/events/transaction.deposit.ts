@@ -5,7 +5,7 @@ import {
   type TransactionRepository,
 } from '../domain/repository';
 import { DepositDTO, DepositResponse } from '../dtos';
-import { isValidAmount } from '../../utils/isValidAmount';
+import { isValidAmount } from '../../utils/validators/isValidAmount';
 
 @Injectable()
 export class Deposit implements DepositEvent {
