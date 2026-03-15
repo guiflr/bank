@@ -19,8 +19,8 @@ describe('TransactionsService', () => {
   beforeEach(async () => {
     transactionRepository = {
       getBalance: jest.fn(),
-      deposit: jest.fn(),
       getAccount: jest.fn(),
+      deposit: jest.fn(),
     };
 
     eventsFactory = {
@@ -63,8 +63,8 @@ describe('TransactionsService', () => {
   it('should delegate event handling to the events factory', async () => {
     const event: EventDTO = {
       type: 'deposit',
-      deposit: { destination: 'acc-123', amount: 50 },
-      withdraw: { origin: 'acc-123', amount: 50 },
+      destination: 'acc-123',
+      amount: 50,
     };
 
     const response = {
