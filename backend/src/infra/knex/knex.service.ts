@@ -1,7 +1,7 @@
 import { Injectable, OnModuleDestroy } from '@nestjs/common';
 import knex, { Knex } from 'knex';
 
-import { DATABASE_URL } from 'src/auth/constants';
+import { DATABASE_URL } from '../../auth/constants/index';
 
 @Injectable()
 export class KnexService implements OnModuleDestroy {
