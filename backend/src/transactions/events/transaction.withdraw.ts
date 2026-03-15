@@ -10,7 +10,8 @@ import {
   type TransactionRepository,
 } from '../domain/repository';
 import { WithdrawDTO, WithdrawResponse } from '../dtos';
-import { isValidAmount } from '../../utils/isValidAmount';
+import { isValidAmount } from '../../utils/validators/isValidAmount';
+import { validateWithdraw } from 'src/utils/validators/validateWithdraw';
 
 @Injectable()
 export class Withdraw implements WithdrawEvent {
@@ -24,25 +25,27 @@ export class Withdraw implements WithdrawEvent {
     origin,
     type,
   }: WithdrawDTO): Promise<WithdrawResponse> {
+    const isValidField = validateWithdraw({ amount, origin, type });
+    if (isValidField.error) {
+      throw new BadRequestException(isValidField.error);
+    }
+
     const isValidValue = isValidAmount(amount);
     if (isValidValue.error) {
       throw new BadRequestException(isValidValue.error);
     }
 
-    const negativeAmount = -Math.abs(amount);
-
     const account = await this.transactionRepository.getAccount(origin);
-
     if (!account?.account) {
       throw new NotFoundException('Account Not Found');
     }
 
     const currentBalance = await this.transactionRepository.getBalance(origin);
-
     if (currentBalance!.balance < amount) {
       throw new BadRequestException('Insufficient Funds');
     }
 
+    const negativeAmount = -Math.abs(amount);
     await this.transactionRepository.deposit({
       account: origin,
       balance: negativeAmount,
