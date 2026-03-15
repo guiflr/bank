@@ -1,4 +1,9 @@
-import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 
 import { AUTH_HASH, type AuthHash } from './domain/hash';
 import { AUTH_REPOSITORY, type AuthRepository } from './domain/repository';
@@ -11,15 +16,19 @@ export class AuthService {
     @Inject(AUTH_HASH) private readonly authHash: AuthHash,
   ) {}
 
-  async signIn({ username, password }: SignInDto): Promise<SignInResponse> {
-    const user = await this.authRepository.findUserByUsername(username);
+  async signIn(data: SignInDto): Promise<SignInResponse> {
+    if (!data?.username || !data?.password) {
+      throw new BadRequestException('username and passowrd are required');
+    }
+
+    const user = await this.authRepository.findUserByUsername(data.username);
 
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
     }
 
     const isPasswordValid = await this.authHash.comparePassword(
-      password,
+      data.password,
       user.password,
     );
 
