@@ -1,4 +1,9 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import {
   TRANSACTION_REPOSITORY,
   type TransactionRepository,
@@ -12,6 +17,10 @@ export class TransactionsService {
   ) {}
 
   async getBalance(account: string) {
+    if (!account) {
+      throw new BadRequestException('Account Not Provided');
+    }
+
     const balance = await this.transactionRepository.getBalance(account);
 
     if (!balance) {
