@@ -4,11 +4,12 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { WithdrawEvent } from '../domain/events';
+
 import {
   TRANSACTION_REPOSITORY,
   type TransactionRepository,
 } from '../domain/repository';
+import { WithdrawEvent } from '../domain/events';
 import { WithdrawDTO, WithdrawResponse } from '../dtos';
 import { isValidAmount } from '../../utils/validators/isValidAmount';
 import { validateWithdraw } from 'src/utils/validators/validateWithdraw';
