@@ -15,9 +15,6 @@ import { AUTH_REPOSITORY } from './domain/repository';
   controllers: [AuthController],
   providers: [
     AuthService,
-    AuthJwt,
-    Bcrypt,
-    AuthKnexRepository,
     {
       provide: AUTH_TOKEN,
       useExisting: AuthJwt,
