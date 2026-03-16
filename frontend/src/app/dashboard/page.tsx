@@ -8,6 +8,7 @@ type DashboardPageProps = {
   searchParams?: Promise<{
     error?: string;
     success?: string;
+    account_id?: string;
   }>;
 };
 
@@ -15,6 +16,7 @@ export default async function Dashboard({ searchParams }: DashboardPageProps) {
   const resolvedParams = searchParams ? await searchParams : undefined;
   const error = resolvedParams?.error;
   const success = resolvedParams?.success;
+  const accountId = resolvedParams?.account_id;
 
   return (
     <main className="min-h-screen bg-white px-6 py-12 text-black dark:bg-black dark:text-white">
@@ -54,7 +56,7 @@ export default async function Dashboard({ searchParams }: DashboardPageProps) {
             <TransferModal />
           </article>
 
-          <BalanceCard />
+          <BalanceCard initialAccountId={accountId} />
         </section>
       </div>
     </main>
