@@ -1,6 +1,12 @@
 "use client";
 
-import { useActionState, useEffect, useMemo, useRef } from "react";
+import {
+  useActionState,
+  useEffect,
+  useMemo,
+  useRef,
+  useTransition,
+} from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import Input from "../components/Input";
@@ -21,6 +27,7 @@ const initialState: BalanceState = {
 
 export default function BalanceCard({ initialAccountId }: BalanceCardProps) {
   const [state, formAction] = useActionState(fetchBalance, initialState);
+  const [, startTransition] = useTransition();
   const router = useRouter();
   const searchParams = useSearchParams();
   const hasFetchedFromQuery = useRef(false);
@@ -48,8 +55,10 @@ export default function BalanceCard({ initialAccountId }: BalanceCardProps) {
     hasFetchedFromQuery.current = true;
     const formData = new FormData();
     formData.set("account_id", accountId);
-    formAction(formData);
-  }, [accountId, formAction]);
+    startTransition(() => {
+      formAction(formData);
+    });
+  }, [accountId, formAction, startTransition]);
 
   const handleSubmit = (event: React.SyntheticEvent<HTMLFormElement>) => {
     const formData = new FormData(event.currentTarget);
