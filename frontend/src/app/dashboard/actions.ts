@@ -7,10 +7,23 @@ type TransactionResponse = {
   message?: string;
 };
 
+function buildDashboardRedirect(
+  type: "error" | "success",
+  message: string,
+  accountId?: string,
+) {
+  const params = new URLSearchParams();
+  params.set(type, message);
+  if (accountId) {
+    params.set("account_id", accountId);
+  }
+  return `/dashboard?${params.toString()}`;
+}
+
 function ensureBaseUrl() {
   const baseUrl = process.env.API_BASE_URL;
   if (!baseUrl) {
-    redirect(`/dashboard?error=${encodeURIComponent("API não configurada")}`);
+    redirect(buildDashboardRedirect("error", "API não configurada"));
   }
   return baseUrl;
 }
@@ -19,7 +32,7 @@ function parseAmountCents(value: FormDataEntryValue | null) {
   const raw = String(value || "0");
   const amount = Number.parseInt(raw, 10);
   if (!Number.isFinite(amount) || amount <= 0) {
-    redirect(`/dashboard?error=${encodeURIComponent("Valor inválido")}`);
+    redirect(buildDashboardRedirect("error", "Valor inválido"));
   }
   return amount;
 }
@@ -30,7 +43,7 @@ export async function deposit(formData: FormData) {
   const amount = parseAmountCents(formData.get("amount"));
 
   if (!destination) {
-    redirect(`/dashboard?error=${encodeURIComponent("Conta inválida")}`);
+    redirect(buildDashboardRedirect("error", "Conta inválida"));
   }
 
   const cookieStore = await cookies();
@@ -53,10 +66,10 @@ export async function deposit(formData: FormData) {
 
   if (!response.ok || data.message) {
     const message = data.message || "Falha ao realizar deposito";
-    redirect(`/dashboard?error=${encodeURIComponent(message)}`);
+    redirect(buildDashboardRedirect("error", message));
   }
 
-  redirect(`/dashboard?success=${encodeURIComponent("Depósito realizado")}`);
+  redirect(buildDashboardRedirect("success", "Depósito realizado", destination));
 }
 
 export async function withdraw(formData: FormData) {
@@ -65,7 +78,7 @@ export async function withdraw(formData: FormData) {
   const amount = parseAmountCents(formData.get("amount"));
 
   if (!origin) {
-    redirect(`/dashboard?error=${encodeURIComponent("Conta inválida")}`);
+    redirect(buildDashboardRedirect("error", "Conta inválida"));
   }
 
   const cookieStore = await cookies();
@@ -88,10 +101,10 @@ export async function withdraw(formData: FormData) {
 
   if (!response.ok || data.message) {
     const message = data.message || "Falha ao realizar saque";
-    redirect(`/dashboard?error=${encodeURIComponent(message)}`);
+    redirect(buildDashboardRedirect("error", message));
   }
 
-  redirect(`/dashboard?success=${encodeURIComponent("Saque realizado")}`);
+  redirect(buildDashboardRedirect("success", "Saque realizado", origin));
 }
 
 export async function transfer(formData: FormData) {
@@ -101,7 +114,7 @@ export async function transfer(formData: FormData) {
   const amount = parseAmountCents(formData.get("amount"));
 
   if (!origin || !destination) {
-    redirect(`/dashboard?error=${encodeURIComponent("Conta inválida")}`);
+    redirect(buildDashboardRedirect("error", "Conta inválida"));
   }
 
   const cookieStore = await cookies();
@@ -125,11 +138,11 @@ export async function transfer(formData: FormData) {
 
   if (!response.ok || data.message) {
     const message = data.message || "Falha ao realizar transferencia";
-    redirect(`/dashboard?error=${encodeURIComponent(message)}`);
+    redirect(buildDashboardRedirect("error", message));
   }
 
   redirect(
-    `/dashboard?success=${encodeURIComponent("Transferência realizada")}`,
+    buildDashboardRedirect("success", "Transferência realizada", origin),
   );
 }
 
