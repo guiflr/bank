@@ -2,7 +2,7 @@ import BalanceCard from "./BalanceCard";
 import DepositModal from "./DepositModal";
 import TransferModal from "./TransferModal";
 import WithdrawModal from "./WithdrawModal";
-import { ensureValidSession } from "./actions";
+import { ensureValidSession, logout } from "./actions";
 import Notification from "../components/Notification";
 
 type DashboardPageProps = {
@@ -22,7 +22,7 @@ export default async function Dashboard({ searchParams }: DashboardPageProps) {
   await ensureValidSession(accountId);
 
   return (
-    <main className="min-h-screen bg-white px-6 py-12 text-black dark:bg-black dark:text-white">
+    <main className="relative min-h-screen bg-white px-6 py-12 text-black dark:bg-black dark:text-white">
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-8">
         <header className="flex flex-col gap-2">
           <h1 className="text-3xl font-semibold tracking-tight">Dashboard</h1>
@@ -62,6 +62,15 @@ export default async function Dashboard({ searchParams }: DashboardPageProps) {
           <BalanceCard initialAccountId={accountId} />
         </section>
       </div>
+
+      <form action={logout} className="fixed right-6 top-6">
+        <button
+          type="submit"
+          className="border border-black bg-black px-4 py-2 text-xs uppercase tracking-[0.3em] text-white transition hover:cursor-pointer dark:border-white dark:bg-white dark:text-black"
+        >
+          Sair
+        </button>
+      </form>
     </main>
   );
 }
