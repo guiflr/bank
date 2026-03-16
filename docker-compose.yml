@@ -37,5 +37,19 @@ services:
         condition: service_healthy
     command: sh -c "npm run db:migrate && npm run db:seed && node dist/src/main"
 
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: guifler-bank-frontend
+    restart: unless-stopped
+    environment:
+      API_BASE_URL: http://backend:3000
+      PORT: 3001
+    ports:
+      - "3001:3001"
+    depends_on:
+      - backend
+
 volumes:
   postgres_data:
