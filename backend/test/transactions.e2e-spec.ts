@@ -12,12 +12,19 @@ import { TransactionsService } from '../src/transactions/transactions.service';
 
 describe('TransactionsModule (e2e)', () => {
   let app: INestApplication<App>;
-  let transactionRepository: { getBalance: jest.Mock; deposit: jest.Mock };
+  let transactionRepository: {
+    getBalance: jest.Mock;
+    deposit: jest.Mock;
+    transfer: jest.Mock;
+    getAccount: jest.Mock;
+  };
 
   beforeEach(async () => {
     transactionRepository = {
       getBalance: jest.fn(),
       deposit: jest.fn(),
+      transfer: jest.fn(),
+      getAccount: jest.fn(),
     };
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -82,5 +89,31 @@ describe('TransactionsModule (e2e)', () => {
       type: 'deposit',
     });
     expect(transactionRepository.getBalance).toHaveBeenCalledWith('acc-1');
+  });
+
+  it('processes a withdraw event through the module services', async () => {
+    transactionRepository.deposit.mockResolvedValue(undefined);
+    transactionRepository.getBalance.mockResolvedValue({ balance: 350 });
+    transactionRepository.getAccount.mockResolvedValue({
+      balance: 350,
+      account: 'acc-2',
+    });
+
+    const service = app.get(TransactionsService);
+    const response = await service.event({
+      type: 'withdraw',
+      origin: 'acc-2',
+      amount: 50,
+    });
+
+    expect(response).toEqual({
+      origin: { id: 'acc-2', balance: 350 },
+    });
+    expect(transactionRepository.deposit).toHaveBeenCalledWith({
+      account: 'acc-2',
+      balance: -50,
+      type: 'withdraw',
+    });
+    expect(transactionRepository.getBalance).toHaveBeenCalledWith('acc-2');
   });
 });
