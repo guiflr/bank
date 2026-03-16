@@ -69,7 +69,9 @@ export async function deposit(formData: FormData) {
     redirect(buildDashboardRedirect("error", message));
   }
 
-  redirect(buildDashboardRedirect("success", "Depósito realizado", destination));
+  redirect(
+    buildDashboardRedirect("success", "Depósito realizado", destination),
+  );
 }
 
 export async function withdraw(formData: FormData) {
@@ -189,4 +191,36 @@ export async function fetchBalance(
   }
 
   return { balanceCents: balance };
+}
+
+export async function ensureValidSession(accountId?: string) {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("access_token")?.value;
+
+  if (!token) {
+    redirect("/login");
+  }
+
+  const baseUrl = process.env.API_BASE_URL;
+  if (!baseUrl) {
+    return;
+  }
+
+  const accountIdToCheck = accountId || "__probe__";
+  const response = await fetch(
+    `${baseUrl}/transactions/balance?account_id=${encodeURIComponent(
+      accountIdToCheck,
+    )}`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      cache: "no-store",
+    },
+  );
+
+  if (response.status === 401 || response.status === 403) {
+    redirect("/login");
+  }
 }

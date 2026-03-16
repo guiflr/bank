@@ -1,8 +1,9 @@
-import DepositModal from "./DepositModal";
-import WithdrawModal from "./WithdrawModal";
-import Notification from "../components/Notification";
-import TransferModal from "./TransferModal";
 import BalanceCard from "./BalanceCard";
+import DepositModal from "./DepositModal";
+import TransferModal from "./TransferModal";
+import WithdrawModal from "./WithdrawModal";
+import { ensureValidSession } from "./actions";
+import Notification from "../components/Notification";
 
 type DashboardPageProps = {
   searchParams?: Promise<{
@@ -17,6 +18,8 @@ export default async function Dashboard({ searchParams }: DashboardPageProps) {
   const error = resolvedParams?.error;
   const success = resolvedParams?.success;
   const accountId = resolvedParams?.account_id;
+
+  await ensureValidSession(accountId);
 
   return (
     <main className="min-h-screen bg-white px-6 py-12 text-black dark:bg-black dark:text-white">
