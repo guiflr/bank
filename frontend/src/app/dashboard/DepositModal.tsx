@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
+
 import Input from "../components/Input";
+import MoneyInput from "../components/MoneyInput";
 
 export default function DepositModal() {
   const [isOpen, setIsOpen] = useState(false);
@@ -45,13 +47,7 @@ export default function DepositModal() {
 
             <form className="mt-6 grid gap-4">
               <Input name="account" type="text" label="Conta" />
-              <Input
-                name="amount"
-                type="number"
-                min="0"
-                step="0.01"
-                label="Valor"
-              />
+              <MoneyInput name="amount" label="Valor" />
 
               <button
                 type="submit"
