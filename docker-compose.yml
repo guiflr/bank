@@ -1,4 +1,4 @@
-version: '3.9'
+version: "3.9"
 
 services:
   postgres:
@@ -10,14 +10,32 @@ services:
       POSTGRES_USER: guifler
       POSTGRES_PASSWORD: guifler_pwd
     ports:
-      - '5432:5432'
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U guifler -d guifler_bank']
+      test: ["CMD-SHELL", "pg_isready -U guifler -d guifler_bank"]
       interval: 5s
       timeout: 5s
       retries: 10
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: guifler-bank-backend
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://guifler:guifler_pwd@postgres:5432/guifler_bank?schema=public
+      PORT: 3000
+      ADMIN_USERNAME: "admin"
+      ADMIN_PASSWORD: "admin"
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: sh -c "npm run db:migrate && npm run db:seed && node dist/src/main"
 
 volumes:
   postgres_data:
