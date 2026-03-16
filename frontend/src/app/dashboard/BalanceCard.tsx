@@ -1,77 +1,15 @@
 "use client";
 
-import {
-  useActionState,
-  useEffect,
-  useMemo,
-  useRef,
-  useTransition,
-} from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-
 import Input from "../components/Input";
-import { fetchBalance } from "./actions";
-
-type BalanceState = {
-  balanceCents: number | null;
-  error?: string;
-};
+import { useBalanceCardState } from "../hooks/balanceCardHook";
 
 type BalanceCardProps = {
   initialAccountId?: string;
 };
 
-const initialState: BalanceState = {
-  balanceCents: null,
-};
-
 export default function BalanceCard({ initialAccountId }: BalanceCardProps) {
-  const [state, formAction] = useActionState(fetchBalance, initialState);
-  const [, startTransition] = useTransition();
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const hasFetchedFromQuery = useRef(false);
-
-  const formattedBalance = useMemo(() => {
-    if (state.balanceCents === null) {
-      return null;
-    }
-    return new Intl.NumberFormat("pt-BR", {
-      style: "currency",
-      currency: "BRL",
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(state.balanceCents / 100);
-  }, [state.balanceCents]);
-
-  const accountIdFromQuery = searchParams.get("account_id") ?? "";
-  const accountId = accountIdFromQuery || initialAccountId || "";
-
-  useEffect(() => {
-    if (!accountId || hasFetchedFromQuery.current) {
-      return;
-    }
-
-    hasFetchedFromQuery.current = true;
-    const formData = new FormData();
-    formData.set("account_id", accountId);
-    startTransition(() => {
-      formAction(formData);
-    });
-  }, [accountId, formAction, startTransition]);
-
-  const handleSubmit = (event: React.SyntheticEvent<HTMLFormElement>) => {
-    const formData = new FormData(event.currentTarget);
-    const submittedAccountId = String(formData.get("account_id") || "").trim();
-
-    if (!submittedAccountId) {
-      return;
-    }
-
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("account_id", submittedAccountId);
-    router.replace(`/dashboard?${params.toString()}`);
-  };
+  const { accountId, formattedBalance, error, formAction, handleSubmit } =
+    useBalanceCardState(initialAccountId);
 
   return (
     <article className="relative rounded-2xl border-2 border-black bg-white p-6 dark:border-white dark:bg-black">
@@ -83,9 +21,9 @@ export default function BalanceCard({ initialAccountId }: BalanceCardProps) {
         </p>
       ) : null}
 
-      {state.error ? (
+      {error ? (
         <p className="absolute right-6 top-6 text-sm text-red-700 dark:text-red-200">
-          {state.error}
+          {error}
         </p>
       ) : null}
 
