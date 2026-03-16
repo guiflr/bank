@@ -6,7 +6,6 @@ import { usePathname, useRouter } from "next/navigation";
 type NotificationProps = {
   message: string;
   variant?: "error" | "success";
-  clearQueryParams?: boolean;
 };
 
 const styles = {
