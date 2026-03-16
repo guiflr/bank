@@ -1,4 +1,5 @@
 import DepositModal from "./DepositModal";
+import WithdrawModal from "./WithdrawModal";
 
 type DashboardPageProps = {
   searchParams?: Promise<{
@@ -40,6 +41,14 @@ export default async function Dashboard({ searchParams }: DashboardPageProps) {
               Adicione saldo a sua conta rapidamente.
             </p>
             <DepositModal />
+          </article>
+
+          <article className="rounded-2xl border-2 border-black bg-white p-6 dark:border-white dark:bg-black">
+            <h2 className="text-lg font-semibold">Saque</h2>
+            <p className="mt-2 text-sm text-black/70 dark:text-white/70">
+              Retire saldo da sua conta quando precisar.
+            </p>
+            <WithdrawModal />
           </article>
         </section>
       </div>
