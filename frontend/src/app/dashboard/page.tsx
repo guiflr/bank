@@ -1,5 +1,6 @@
 import DepositModal from "./DepositModal";
 import WithdrawModal from "./WithdrawModal";
+import TransferModal from "./TransferModal";
 
 type DashboardPageProps = {
   searchParams?: Promise<{
@@ -19,7 +20,7 @@ export default async function Dashboard({ searchParams }: DashboardPageProps) {
         <header className="flex flex-col gap-2">
           <h1 className="text-3xl font-semibold tracking-tight">Dashboard</h1>
           <p className="text-sm uppercase tracking-[0.25em] text-black/70 dark:text-white/70">
-            Acoes disponiveis
+            Ações disponíveis
           </p>
         </header>
 
@@ -36,7 +37,7 @@ export default async function Dashboard({ searchParams }: DashboardPageProps) {
 
         <section className="grid gap-4">
           <article className="rounded-2xl border-2 border-black bg-white p-6 dark:border-white dark:bg-black">
-            <h2 className="text-lg font-semibold">Deposito</h2>
+            <h2 className="text-lg font-semibold">Depósito</h2>
             <p className="mt-2 text-sm text-black/70 dark:text-white/70">
               Adicione saldo a sua conta rapidamente.
             </p>
@@ -49,6 +50,14 @@ export default async function Dashboard({ searchParams }: DashboardPageProps) {
               Retire saldo da sua conta quando precisar.
             </p>
             <WithdrawModal />
+          </article>
+
+          <article className="rounded-2xl border-2 border-black bg-white p-6 dark:border-white dark:bg-black">
+            <h2 className="text-lg font-semibold">Transferencia</h2>
+            <p className="mt-2 text-sm text-black/70 dark:text-white/70">
+              Envie saldo entre contas com seguranca.
+            </p>
+            <TransferModal />
           </article>
         </section>
       </div>

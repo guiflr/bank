@@ -93,3 +93,41 @@ export async function withdraw(formData: FormData) {
 
   redirect(`/dashboard?success=${encodeURIComponent("Saque realizado")}`);
 }
+
+export async function transfer(formData: FormData) {
+  const baseUrl = ensureBaseUrl();
+  const origin = String(formData.get("origin") || "").trim();
+  const destination = String(formData.get("destination") || "").trim();
+  const amount = parseAmountCents(formData.get("amount"));
+
+  if (!origin || !destination) {
+    redirect(`/dashboard?error=${encodeURIComponent("Conta inválida")}`);
+  }
+
+  const cookieStore = await cookies();
+  const token = cookieStore.get("access_token")?.value;
+  const response = await fetch(`${baseUrl}/transactions/event`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    body: JSON.stringify({
+      type: "transfer",
+      origin,
+      amount,
+      destination,
+    }),
+    cache: "no-store",
+  });
+
+  const data = (await response.json()) as TransactionResponse;
+
+  if (!response.ok || data.message) {
+    const message = data.message || "Falha ao realizar transferencia";
+    redirect(`/dashboard?error=${encodeURIComponent(message)}`);
+  }
+
+  redirect(`/dashboard?success=${encodeURIComponent("Transferência realizada")}`);
+}
+
