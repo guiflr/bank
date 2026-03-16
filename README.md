@@ -19,7 +19,8 @@ docker compose up --build
 - Frontend: http://localhost:3001
 - Backend API: http://localhost:3000
 - Postgres: localhost:5432
-- Login: `username`:`admin` and `password`:`admin` 
+- Login: `username`:`admin` and `password`:`admin`
+- Session: is valid for 1 hour
 
 The compose file will:
 
