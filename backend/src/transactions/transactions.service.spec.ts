@@ -21,6 +21,7 @@ describe('TransactionsService', () => {
       getBalance: jest.fn(),
       getAccount: jest.fn(),
       deposit: jest.fn(),
+      transfer: jest.fn(),
     };
 
     eventsFactory = {
