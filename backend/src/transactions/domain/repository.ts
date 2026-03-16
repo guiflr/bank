@@ -9,7 +9,7 @@ export type Account = {
 export type DepositDAO = {
   account: string;
   balance: number;
-  type: 'deposit' | 'withdraw';
+  type: 'deposit' | 'withdraw' | 'transfer';
 };
 
 export type DepositResponseDAO = {
@@ -23,4 +23,5 @@ export interface TransactionRepository {
   getBalance(account: string): Promise<Balance | null>;
   getAccount(account: string): Promise<Account | null>;
   deposit(data: DepositDAO): Promise<void>;
+  transfer(origin: DepositDAO, destination: DepositDAO): Promise<void>;
 }

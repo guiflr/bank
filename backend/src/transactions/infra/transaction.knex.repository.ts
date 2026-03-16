@@ -38,4 +38,11 @@ export class TransactionKnexRepository implements TransactionRepository {
   async deposit(data: DepositDAO): Promise<void> {
     await this.knexService.db('transactions').insert(data);
   }
+
+  async transfer(origin: DepositDAO, destination: DepositDAO): Promise<void> {
+    await this.knexService.db.transaction(async (trx) => {
+      await trx('transactions').insert(origin);
+      await trx('transactions').insert(destination);
+    });
+  }
 }
