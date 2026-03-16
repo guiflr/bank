@@ -6,7 +6,7 @@ import {
 } from '../domain/repository';
 import { DepositDTO, DepositResponse } from '../dtos';
 import { isValidAmount } from '../../utils/validators/isValidAmount';
-import { validateDeposit } from 'src/utils/validators/validateDeposit';
+import { validateDeposit } from '../../utils/validators/validateDeposit';
 
 @Injectable()
 export class Deposit implements DepositEvent {

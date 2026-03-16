@@ -12,7 +12,7 @@ import {
 import { WithdrawEvent } from '../domain/events';
 import { WithdrawDTO, WithdrawResponse } from '../dtos';
 import { isValidAmount } from '../../utils/validators/isValidAmount';
-import { validateWithdraw } from 'src/utils/validators/validateWithdraw';
+import { validateWithdraw } from '../../utils/validators/validateWithdraw';
 
 @Injectable()
 export class Withdraw implements WithdrawEvent {

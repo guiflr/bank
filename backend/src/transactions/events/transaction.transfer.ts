@@ -12,7 +12,7 @@ import {
 import { TransferEvent } from '../domain/events';
 import { TransferDTO, TransferResponse } from '../dtos';
 import { isValidAmount } from '../../utils/validators/isValidAmount';
-import { validateTransfer } from 'src/utils/validators/validateTransfer';
+import { validateTransfer } from '../../utils/validators/validateTransfer';
 
 @Injectable()
 export class Transfer implements TransferEvent {
