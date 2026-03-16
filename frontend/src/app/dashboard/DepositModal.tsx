@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import Input from "../components/Input";
 import MoneyInput from "../components/MoneyInput";
+import { deposit } from "./actions";
 
 export default function DepositModal() {
   const [isOpen, setIsOpen] = useState(false);
@@ -45,8 +46,8 @@ export default function DepositModal() {
               </button>
             </div>
 
-            <form className="mt-6 grid gap-4">
-              <Input name="account" type="text" label="Conta" />
+            <form className="mt-6 grid gap-4" action={deposit}>
+              <Input name="destination" type="text" label="Conta" />
               <MoneyInput name="amount" label="Valor" />
 
               <button
