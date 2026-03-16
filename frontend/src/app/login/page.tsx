@@ -1,3 +1,5 @@
+import Input from '../components/Input';
+
 export default function Login() {
   return (
     <main className="grid min-h-screen w-full place-items-center px-6 py-12">
@@ -5,21 +7,19 @@ export default function Login() {
         <form className="grid gap-5">
           <label className="grid gap-2 text-xs uppercase tracking-[0.2em]">
             Username
-            <input
+            <Input
               name="username"
               type="text"
               autoComplete="username"
-              className="border border-black bg-transparent px-3 py-2 text-sm rounded-md outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 focus:ring-offset-white dark:border-white dark:focus:ring-white dark:focus:ring-offset-black"
             />
           </label>
 
           <label className="grid gap-2 text-xs uppercase tracking-[0.2em]">
             Password
-            <input
+            <Input
               name="password"
               type="password"
               autoComplete="current-password"
-              className="border border-black bg-transparent px-3 py-2 text-sm rounded-md outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 focus:ring-offset-white dark:border-white dark:focus:ring-white dark:focus:ring-offset-black"
             />
           </label>
 
