@@ -13,7 +13,8 @@ import { TransactionsController } from './transactions.controller';
 import { TransactionKnexRepository } from './infra/transaction.knex.repository';
 import { Deposit } from './events/transaction.deposit';
 import { Withdraw } from './events/transaction.withdraw';
-import { DEPOSIT_EVENT, WITHDRAW_EVENT } from './domain/events';
+import { Transfer } from './events/transaction.transfer';
+import { DEPOSIT_EVENT, TRANSFER_EVENT, WITHDRAW_EVENT } from './domain/events';
 
 @Module({
   providers: [
@@ -23,6 +24,7 @@ import { DEPOSIT_EVENT, WITHDRAW_EVENT } from './domain/events';
     TransactionKnexRepository,
     Deposit,
     Withdraw,
+    Transfer,
     TransactionsEventsFactoryImpl,
     {
       provide: AUTH_TOKEN,
@@ -43,6 +45,10 @@ import { DEPOSIT_EVENT, WITHDRAW_EVENT } from './domain/events';
     {
       provide: WITHDRAW_EVENT,
       useExisting: Withdraw,
+    },
+    {
+      provide: TRANSFER_EVENT,
+      useExisting: Transfer,
     },
   ],
   controllers: [TransactionsController],
