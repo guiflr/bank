@@ -27,9 +27,9 @@ export default function TransferModal() {
         description="Informe as contas de origem e destino e o valor."
       >
         <form className="mt-6 grid gap-4" action={transfer}>
-          <Input name="origin" type="text" label="Conta origem" />
-          <Input name="destination" type="text" label="Conta destino" />
-          <MoneyInput name="amount" label="Valor" />
+          <Input name="origin" type="text" label="Conta origem" required />
+          <Input name="destination" type="text" label="Conta destino" required />
+          <MoneyInput name="amount" label="Valor" required />
 
           <button
             type="submit"

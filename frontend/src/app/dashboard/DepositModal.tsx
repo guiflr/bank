@@ -27,8 +27,8 @@ export default function DepositModal() {
         description="Informe a conta e o valor."
       >
         <form className="mt-6 grid gap-4" action={deposit}>
-          <Input name="destination" type="text" label="Conta" />
-          <MoneyInput name="amount" label="Valor" />
+          <Input name="destination" type="text" label="Conta" required />
+          <MoneyInput name="amount" label="Valor" required />
 
           <button
             type="submit"

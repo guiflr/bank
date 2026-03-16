@@ -9,6 +9,8 @@ type MoneyInputProps = {
   locale?: string;
   currency?: string;
   defaultCents?: number;
+  required?: boolean;
+  requiredMessage?: string;
 };
 
 export default function MoneyInput({
@@ -17,6 +19,8 @@ export default function MoneyInput({
   locale = "pt-BR",
   currency = "BRL",
   defaultCents = 0,
+  required = false,
+  requiredMessage = "Campo obrigatório",
 }: MoneyInputProps) {
   const formatter = useMemo(
     () =>
@@ -32,10 +36,26 @@ export default function MoneyInput({
   const [cents, setCents] = useState(() => Math.max(0, defaultCents));
   const displayValue = formatter.format(cents / 100);
 
+  const handleInvalid = (event: React.InvalidEvent<HTMLInputElement>) => {
+    if (required && cents <= 0) {
+      event.currentTarget.setCustomValidity(requiredMessage);
+    }
+  };
+
+  const handleInput = (event: React.SyntheticEvent<HTMLInputElement>) => {
+    event.currentTarget.setCustomValidity("");
+  };
+
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const digits = event.target.value.replace(/\D/g, "");
     const nextCents = digits ? Number.parseInt(digits, 10) : 0;
-    setCents(Number.isNaN(nextCents) ? 0 : nextCents);
+    const safeCents = Number.isNaN(nextCents) ? 0 : nextCents;
+    setCents(safeCents);
+    if (required && safeCents <= 0) {
+      event.currentTarget.setCustomValidity(requiredMessage);
+    } else {
+      event.currentTarget.setCustomValidity("");
+    }
   };
 
   return (
@@ -46,6 +66,9 @@ export default function MoneyInput({
         type="text"
         value={displayValue}
         onChange={handleChange}
+        required={required}
+        onInvalid={handleInvalid}
+        onInput={handleInput}
         className={
           "border border-black bg-transparent px-3 py-2 text-sm rounded-md outline-none " +
           "focus:ring-2 focus:ring-black focus:ring-offset-2 focus:ring-offset-white " +
