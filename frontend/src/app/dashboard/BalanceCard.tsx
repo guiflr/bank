@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState, useMemo } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import Input from "../components/Input";
 import { fetchBalance } from "./actions";
@@ -16,6 +17,8 @@ const initialState: BalanceState = {
 
 export default function BalanceCard() {
   const [state, formAction] = useActionState(fetchBalance, initialState);
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   const formattedBalance = useMemo(() => {
     if (state.balanceCents === null) {
@@ -28,6 +31,21 @@ export default function BalanceCard() {
       maximumFractionDigits: 2,
     }).format(state.balanceCents / 100);
   }, [state.balanceCents]);
+
+  const accountIdFromQuery = searchParams.get("account_id") ?? "";
+
+  const handleSubmit = (event: React.SyntheticEvent<HTMLFormElement>) => {
+    const formData = new FormData(event.currentTarget);
+    const accountId = String(formData.get("account_id") || "").trim();
+
+    if (!accountId) {
+      return;
+    }
+
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("account_id", accountId);
+    router.replace(`/dashboard?${params.toString()}`);
+  };
 
   return (
     <article className="relative rounded-2xl border-2 border-black bg-white p-6 dark:border-white dark:bg-black">
@@ -45,12 +63,17 @@ export default function BalanceCard() {
         </p>
       ) : null}
 
-      <form className="mt-6 grid gap-4" action={formAction}>
+      <form
+        className="mt-6 grid gap-4"
+        action={formAction}
+        onSubmit={handleSubmit}
+      >
         <Input
           name="account_id"
           placeholder="Consultar saldo"
           type="text"
           required
+          defaultValue={accountIdFromQuery}
         />
 
         <button
