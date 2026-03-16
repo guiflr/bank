@@ -1,4 +1,11 @@
-import { DepositDTO, DepositResponse, WithdrawDTO, WithdrawResponse } from '../dtos';
+import {
+  DepositDTO,
+  DepositResponse,
+  TransferDTO,
+  TransferResponse,
+  WithdrawDTO,
+  WithdrawResponse,
+} from '../dtos';
 
 export const DEPOSIT_EVENT = 'DEPOSIT_EVENT';
 export interface DepositEvent {
@@ -8,4 +15,9 @@ export interface DepositEvent {
 export const WITHDRAW_EVENT = 'WITHDRAW_EVENT';
 export interface WithdrawEvent {
   withdraw(data: WithdrawDTO): Promise<WithdrawResponse>;
+}
+
+export const TRANSFER_EVENT = 'TRANSFER_EVENT';
+export interface TransferEvent {
+  transfer(data: TransferDTO): Promise<TransferResponse>;
 }
