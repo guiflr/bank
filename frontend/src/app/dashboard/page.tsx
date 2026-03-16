@@ -24,15 +24,36 @@ export default async function Dashboard({ searchParams }: DashboardPageProps) {
   return (
     <main className="relative min-h-screen bg-white px-6 py-12 text-black dark:bg-black dark:text-white">
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-8">
-        <header className="flex flex-col gap-2">
-          <h1 className="text-3xl font-semibold tracking-tight">Dashboard</h1>
-          <p className="text-sm uppercase tracking-[0.25em] text-black/70 dark:text-white/70">
-            Ações disponíveis
-          </p>
-        </header>
+        <header className="flex flex-col gap-4 lg:flex-row lg:items-start">
+          <div className="flex flex-1 flex-col gap-2">
+            <h1 className="text-3xl font-semibold tracking-tight">Dashboard</h1>
+            <p className="text-sm uppercase tracking-[0.25em] text-black/70 dark:text-white/70">
+              Ações disponíveis
+            </p>
+          </div>
 
-        {error ? <Notification message={error} variant="error" /> : null}
-        {success ? <Notification message={success} variant="success" /> : null}
+          <div className="flex w-full flex-1 justify-center lg:pt-1">
+            {error || success ? (
+              <div className="w-full max-w-md">
+                {error ? <Notification message={error} variant="error" /> : null}
+                {success ? (
+                  <Notification message={success} variant="success" />
+                ) : null}
+              </div>
+            ) : null}
+          </div>
+
+          <div className="flex flex-1 justify-end lg:pt-1">
+            <form action={logout}>
+              <button
+                type="submit"
+                className="border border-black bg-black px-4 py-2 text-xs uppercase tracking-[0.3em] text-white transition hover:cursor-pointer dark:border-white dark:bg-white dark:text-black"
+              >
+                Sair
+              </button>
+            </form>
+          </div>
+        </header>
 
         <section className="grid gap-4 lg:grid-cols-4">
           <article className="rounded-2xl border-2 border-black bg-white p-6 dark:border-white dark:bg-black">
@@ -62,15 +83,6 @@ export default async function Dashboard({ searchParams }: DashboardPageProps) {
           <BalanceCard initialAccountId={accountId} />
         </section>
       </div>
-
-      <form action={logout} className="fixed right-6 top-6">
-        <button
-          type="submit"
-          className="border border-black bg-black px-4 py-2 text-xs uppercase tracking-[0.3em] text-white transition hover:cursor-pointer dark:border-white dark:bg-white dark:text-black"
-        >
-          Sair
-        </button>
-      </form>
     </main>
   );
 }
