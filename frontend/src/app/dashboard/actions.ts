@@ -128,6 +128,52 @@ export async function transfer(formData: FormData) {
     redirect(`/dashboard?error=${encodeURIComponent(message)}`);
   }
 
-  redirect(`/dashboard?success=${encodeURIComponent("Transferência realizada")}`);
+  redirect(
+    `/dashboard?success=${encodeURIComponent("Transferência realizada")}`,
+  );
 }
 
+type BalanceState = {
+  balanceCents: number | null;
+  error?: string;
+};
+
+export async function fetchBalance(
+  _prevState: BalanceState,
+  formData: FormData,
+): Promise<BalanceState> {
+  const baseUrl = ensureBaseUrl();
+  const accountId = String(formData.get("account_id") || "").trim();
+
+  if (!accountId) {
+    return { balanceCents: null, error: "Conta inválida" };
+  }
+
+  const cookieStore = await cookies();
+  const token = cookieStore.get("access_token")?.value;
+  const response = await fetch(
+    `${baseUrl}/transactions/balance?account_id=${encodeURIComponent(accountId)}`,
+    {
+      method: "GET",
+      headers: {
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      cache: "no-store",
+    },
+  );
+  const data = (await response.json()) as {
+    balance?: number;
+    message?: string;
+  };
+
+  if (!response.ok && data.message) {
+    return { balanceCents: null, error: data.message };
+  }
+
+  const balance = Number(data.balance);
+  if (!Number.isFinite(balance)) {
+    return { balanceCents: null, error: "Saldo inválido" };
+  }
+
+  return { balanceCents: balance };
+}

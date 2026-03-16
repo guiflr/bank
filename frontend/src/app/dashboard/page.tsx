@@ -2,6 +2,7 @@ import DepositModal from "./DepositModal";
 import WithdrawModal from "./WithdrawModal";
 import Notification from "../components/Notification";
 import TransferModal from "./TransferModal";
+import BalanceCard from "./BalanceCard";
 
 type DashboardPageProps = {
   searchParams?: Promise<{
@@ -17,7 +18,7 @@ export default async function Dashboard({ searchParams }: DashboardPageProps) {
 
   return (
     <main className="min-h-screen bg-white px-6 py-12 text-black dark:bg-black dark:text-white">
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-8">
+      <div className="mx-auto flex w-full max-w-7xl flex-col gap-8">
         <header className="flex flex-col gap-2">
           <h1 className="text-3xl font-semibold tracking-tight">Dashboard</h1>
           <p className="text-sm uppercase tracking-[0.25em] text-black/70 dark:text-white/70">
@@ -28,7 +29,7 @@ export default async function Dashboard({ searchParams }: DashboardPageProps) {
         {error ? <Notification message={error} variant="error" /> : null}
         {success ? <Notification message={success} variant="success" /> : null}
 
-        <section className="grid gap-4 lg:grid-cols-3">
+        <section className="grid gap-4 lg:grid-cols-4">
           <article className="rounded-2xl border-2 border-black bg-white p-6 dark:border-white dark:bg-black">
             <h2 className="text-lg font-semibold">Depósito</h2>
             <p className="mt-2 text-sm text-black/70 dark:text-white/70">
@@ -52,6 +53,8 @@ export default async function Dashboard({ searchParams }: DashboardPageProps) {
             </p>
             <TransferModal />
           </article>
+
+          <BalanceCard />
         </section>
       </div>
     </main>
