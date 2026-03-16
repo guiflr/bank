@@ -19,6 +19,7 @@ docker compose up --build
 - Frontend: http://localhost:3001
 - Backend API: http://localhost:3000
 - Postgres: localhost:5432
+- Login: `username`:`admin` and `password`:`admin` 
 
 The compose file will:
 
