@@ -1,4 +1,9 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotAcceptableException,
+} from '@nestjs/common';
 import { DepositEvent } from '../domain/events';
 import {
   TRANSACTION_REPOSITORY,
@@ -34,11 +39,25 @@ export class Deposit implements DepositEvent {
       throw new BadRequestException(isValidValue.error);
     }
 
-    await this.transactionRepository.deposit({
+    const depositData = {
       account: destination,
       balance: amount,
       type,
-    });
+    };
+
+    const duplicatedTransaction =
+      await this.transactionRepository.findDuplicatedTransaction(
+        depositData,
+        '',
+      );
+
+    if (duplicatedTransaction) {
+      throw new NotAcceptableException(
+        'Duplicated Transaction. It was found out the same transaction in the last minute. Wait for 1 minute to make the same transaction',
+      );
+    }
+
+    await this.transactionRepository.deposit(depositData);
 
     const balance = await this.transactionRepository.getBalance(destination);
 

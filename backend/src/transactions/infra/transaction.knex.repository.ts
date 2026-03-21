@@ -45,4 +45,23 @@ export class TransactionKnexRepository implements TransactionRepository {
       await trx('transactions').insert(destination);
     });
   }
+
+  async findDuplicatedTransaction(
+    origin: DepositDAO,
+    date: string,
+  ): Promise<Account | null> {
+    const data = await this.knexService
+      .db('transactions')
+      .where(
+        'created_at',
+        '>=',
+        this.knexService.db.raw("now() - interval '1 minute'"),
+      )
+      .andWhere(origin)
+      .first();
+
+    if (!data) return null;
+
+    return data;
+  }
 }

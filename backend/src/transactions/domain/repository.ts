@@ -24,4 +24,8 @@ export interface TransactionRepository {
   getAccount(account: string): Promise<Account | null>;
   deposit(data: DepositDAO): Promise<void>;
   transfer(origin: DepositDAO, destination: DepositDAO): Promise<void>;
+  findDuplicatedTransaction(
+    origin: DepositDAO,
+    date: string,
+  ): Promise<Account | null>;
 }
