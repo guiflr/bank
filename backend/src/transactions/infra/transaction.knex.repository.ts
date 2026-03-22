@@ -25,7 +25,7 @@ export class TransactionKnexRepository implements TransactionRepository {
 
   async getAccount(account: string): Promise<Account | null> {
     const data = await this.knexService
-      .db('transactions')
+      .db('accounts')
       .select('account')
       .where({ account })
       .first();
@@ -33,6 +33,14 @@ export class TransactionKnexRepository implements TransactionRepository {
     if (!data?.account) return null;
 
     return data;
+  }
+
+  async createAccountIfNotExists(account: string): Promise<void> {
+    await this.knexService
+      .db('accounts')
+      .insert({ account })
+      .onConflict('account')
+      .ignore();
   }
 
   async deposit(data: DepositDAO): Promise<void> {

@@ -20,8 +20,10 @@ describe('TransactionsService', () => {
     transactionRepository = {
       getBalance: jest.fn(),
       getAccount: jest.fn(),
+      createAccountIfNotExists: jest.fn(),
       deposit: jest.fn(),
       transfer: jest.fn(),
+      findDuplicatedTransaction: jest.fn(),
     };
 
     eventsFactory = {

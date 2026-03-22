@@ -39,6 +39,8 @@ export class Deposit implements DepositEvent {
       throw new BadRequestException(isValidValue.error);
     }
 
+    await this.transactionRepository.createAccountIfNotExists(destination);
+
     const depositData = {
       account: destination,
       balance: amount,
